@@ -25,8 +25,30 @@ uint8_t availible();
 */
 uint8_t read();
 
-void deserialize() {
+void deserialize() 
+{
+    uint8_t buffer[3];
+    while (availible() >= 3)
+    {
+        buffer[0] = read();
+        buffer[1] = read();
+        buffer[2] = read();
 
+        if (buffer[0] == 0xAA && buffer[2] == 0xFF) 
+        {
+            // {0xAA, 0x01, 0xFF}
+            if (buffer[1] == 0x01)
+            {
+                return 1;
+            }
+            // {0xAA, 0x00, 0xFF}
+            else if (buffer[1] == 0x00)
+            {
+                return 0;
+            }
+        }
+    }
+    return -1;
 }
 
 /* пример работы функций для доступа к массиву
